@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const AMOUNT_KOBO = 200000; // ₦2,000.00 in kobo
-const FALLBACK_EMAIL = "kicks@gmail.com";
+const FALLBACK_EMAIL = "leaks.and.kicks@gmail.com";
 
 function resolveAppUrl(req: NextRequest): string {
   const configured = process.env.NEXT_PUBLIC_APP_URL?.trim();
