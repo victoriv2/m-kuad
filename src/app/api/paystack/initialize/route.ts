@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const AMOUNT_KOBO = 10000; // ₦100.00 in kobo
+const AMOUNT_KOBO = 200000; // ₦2,000.00 in kobo
 const FALLBACK_EMAIL = "leaks.and.kicks@gmail.com";
 
 function resolveAppUrl(req: NextRequest): string {

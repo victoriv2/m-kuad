@@ -73,7 +73,7 @@ function VerifyContent() {
         {status === "loading" && (
           <>
             <span className="badge">Verifying Payment</span>
-            <h1>Confirming your ₦100 payment...</h1>
+            <h1>Confirming your ₦2,000 payment...</h1>
             <p className="subtitle">
               Please wait a moment while we verify your transaction and unlock
               your Telegram group link.
