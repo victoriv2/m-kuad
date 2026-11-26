@@ -2,6 +2,54 @@ import { NextRequest, NextResponse } from "next/server";
 
 const REQUIRED_AMOUNT_KOBO = 10000; // ₦100.00
 
+interface MemberRecord {
+  reference: string;
+  telegramUsername: string;
+  amountNaira: number;
+  paidAt: string;
+}
+
+async function recordVerifiedMember(member: MemberRecord): Promise<void> {
+  const masterKey = process.env.JSONBIN_MASTER_KEY?.trim();
+  const binId = process.env.JSONBIN_BIN_ID?.trim();
+
+  if (!masterKey || !binId) return;
+
+  try {
+    const getRes = await fetch(
+      `https://api.jsonbin.io/v3/b/${encodeURIComponent(binId)}/latest`,
+      {
+        headers: { "X-Master-Key": masterKey },
+        cache: "no-store",
+      }
+    );
+
+    if (!getRes.ok) return;
+
+    const getData = await getRes.json();
+    const existing: MemberRecord[] = Array.isArray(getData?.record?.members)
+      ? getData.record.members
+      : [];
+
+    if (existing.some((item) => item.reference === member.reference)) {
+      return;
+    }
+
+    const updated = [member, ...existing];
+
+    await fetch(`https://api.jsonbin.io/v3/b/${encodeURIComponent(binId)}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Master-Key": masterKey,
+      },
+      body: JSON.stringify({ members: updated }),
+    });
+  } catch {
+    // Do not block the user's invite link if logging fails
+  }
+}
+
 export async function GET(req: NextRequest) {
   const reference = req.nextUrl.searchParams.get("reference")?.trim();
 
@@ -53,6 +101,19 @@ export async function GET(req: NextRequest) {
         { status: 402 }
       );
     }
+
+    const rawUsername = tx.metadata?.telegram_username;
+    const telegramUsername =
+      typeof rawUsername === "string" && rawUsername.trim()
+        ? rawUsername.trim()
+        : "(not provided)";
+
+    await recordVerifiedMember({
+      reference: tx.reference || reference,
+      telegramUsername,
+      amountNaira: Number(tx.amount) / 100,
+      paidAt: tx.paid_at || new Date().toISOString(),
+    });
 
     return NextResponse.json({
       inviteLink: telegramGroupUrl,
