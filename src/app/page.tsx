@@ -45,7 +45,7 @@ export default function HomePage() {
         </p>
 
         <div className="price-box">
-          <span className="price">₦2,000</span>
+          <span className="price">₦100</span>
           <span className="price-note">One-time access fee</span>
         </div>
 
@@ -72,7 +72,7 @@ export default function HomePage() {
           {error && <div className="error">{error}</div>}
 
           <button className="btn" type="submit" disabled={loading}>
-            {loading ? "Redirecting to Paystack..." : "Pay ₦2,000 to Join"}
+            {loading ? "Redirecting to Paystack..." : "Pay ₦100 to Join"}
           </button>
         </form>
 

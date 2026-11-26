@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const REQUIRED_AMOUNT_KOBO = 200000; // ₦2,000.00
+const REQUIRED_AMOUNT_KOBO = 10000; // ₦100.00
 
 export async function GET(req: NextRequest) {
   const reference = req.nextUrl.searchParams.get("reference")?.trim();
