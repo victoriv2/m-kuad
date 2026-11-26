@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const AMOUNT_KOBO = 200000; // ₦2,000.00 in kobo
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const FALLBACK_EMAIL = "kicks@gmail.com";
 
 function resolveAppUrl(req: NextRequest): string {
   const configured = process.env.NEXT_PUBLIC_APP_URL?.trim();
@@ -23,15 +23,10 @@ function resolveAppUrl(req: NextRequest): string {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => null);
-    const email = typeof body?.email === "string" ? body.email.trim() : "";
-    const name = typeof body?.name === "string" ? body.name.trim() : "";
-
-    if (!EMAIL_REGEX.test(email)) {
-      return NextResponse.json(
-        { error: "Please enter a valid email address." },
-        { status: 400 }
-      );
-    }
+    const telegramUsername =
+      typeof body?.telegramUsername === "string"
+        ? body.telegramUsername.trim()
+        : "";
 
     const secretKey = process.env.PAYSTACK_SECRET_KEY?.trim();
     if (!secretKey) {
@@ -52,12 +47,12 @@ export async function POST(req: NextRequest) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email,
+          email: FALLBACK_EMAIL,
           amount: AMOUNT_KOBO,
           currency: "NGN",
           callback_url: `${appUrl}/verify`,
           metadata: {
-            full_name: name,
+            telegram_username: telegramUsername,
             product: "Telegram Group Access",
           },
         }),

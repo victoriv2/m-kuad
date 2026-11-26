@@ -3,8 +3,7 @@
 import { useState, FormEvent } from "react";
 
 export default function HomePage() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [telegramUsername, setTelegramUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -17,7 +16,7 @@ export default function HomePage() {
       const res = await fetch("/api/paystack/initialize", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email }),
+        body: JSON.stringify({ telegramUsername }),
       });
 
       const data = await res.json();
@@ -58,25 +57,15 @@ export default function HomePage() {
 
         <form className="form" onSubmit={handleSubmit}>
           <div className="field">
-            <label htmlFor="name">Full Name (optional)</label>
+            <label htmlFor="telegram-username">
+              Telegram Username (optional)
+            </label>
             <input
-              id="name"
+              id="telegram-username"
               type="text"
-              placeholder="e.g. Chinedu Okafor"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-
-          <div className="field">
-            <label htmlFor="email">Email Address *</label>
-            <input
-              id="email"
-              type="email"
-              required
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              placeholder="e.g. @username"
+              value={telegramUsername}
+              onChange={(e) => setTelegramUsername(e.target.value)}
             />
           </div>
 
