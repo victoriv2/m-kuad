@@ -1,9 +1,14 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 
 export default function HomePage() {
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowModal(true), 2500);
+    return () => clearTimeout(timer);
+  }, []);
   const [telegramUsername, setTelegramUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -41,7 +46,9 @@ export default function HomePage() {
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <img src="/popup.jpg" alt="Leaks and Kicks" className="modal-image" />
-            <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>
+            <div className="modal-close-row">
+              <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>
+            </div>
           </div>
         </div>
       )}
